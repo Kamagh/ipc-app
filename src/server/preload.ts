@@ -1,9 +1,23 @@
-import { ipcRenderer, contextBridge } from "electron";
+import { ipcRenderer, contextBridge, IpcRendererEvent, IpcRenderer } from "electron";
 
-const APP_BRIDGE = {
-    getData: (): Promise<string> => ipcRenderer.invoke("GET/data")  //returns a promise   
+type IListener = (event: IpcRendererEvent, ...args: any[]) => void;
+
+const globals = {
+    ipcRenderer: {
+        invoke(channel: string, ...args: any) {
+            return ipcRenderer.invoke(channel, ...args);
+        },
+
+        send(channel: string, ...args: any) {
+            ipcRenderer.send(channel, ...args);
+        },
+
+        on(channel: string, listener: IListener) {
+            ipcRenderer.on(channel, listener);
+        }
+    }
 }
+console.log("asd");
 
-export default APP_BRIDGE;
-//window-api 
-contextBridge.exposeInMainWorld("bridge", APP_BRIDGE);
+
+contextBridge.exposeInMainWorld("bridge", globals);
