@@ -3,22 +3,6 @@ import { useState } from 'react';
 import * as ReactDOM from 'react-dom';
 import { ipcRenderer } from '../common/global'
 
-/* let data = "";
-const getDataView = async () => {
-    console.log(window);
-    //console.log(ipcRenderer);
-    //await window.bridge.getData()
-    
-    console.log(ipcRenderer)
-    //console.log(await api.getData());
-    //console.log(window.bridge);
-
-    
-   // data = await window.bridge.getData(); 
-    console.log(data);
-    return data;
-} */
-
 
 function App() {
     const [process, setProcess] = useState("nothing is happening now");

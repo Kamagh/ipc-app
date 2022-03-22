@@ -3,8 +3,9 @@ import { app, BrowserWindow, ipcMain, IpcMainEvent } from 'electron';
 // plugin that tells the Electron app where to look for the Webpack-bundled app code (depending on
 // whether you're running in development or production).
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
-declare const MAIN_ABOUT_WINDOW_WEBPACK_ENTRY: string;
+declare const ABOUT_WINDOW_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
+declare const ABOUT_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -15,11 +16,11 @@ if (require('electron-squirrel-startup')) {
 
 const createWindow = (): void => {
   // Create the browser window.
+  //const windows = new Set();
   const mainWindow = new BrowserWindow({
     height: 600,
     width: 800,
     webPreferences: {
-      nodeIntegration: true,
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY
     }
   });
@@ -37,12 +38,12 @@ const createAboutWindow = (): void => {
     height: 300,
     width: 400,
     webPreferences: {
-      nodeIntegration: true,
+      preload: ABOUT_WINDOW_PRELOAD_WEBPACK_ENTRY
     }
   });
 
   // and load the index.html of the app.
-  mainWindow.loadURL("../public/about.html");
+  mainWindow.loadURL(ABOUT_WINDOW_WEBPACK_ENTRY);
 };
 
 // This method will be called when Electron has finished

@@ -57,7 +57,14 @@
                   "preload": {
                     "js": "./src/server/preload"
                   }
-                  
+                },
+                {
+                  "html": "./src/public/about.html",
+                  "js": "./src/server/renderer.about.ts",
+                  "name": "about_window",
+                  "preload": {
+                    "js": "./src/server/preload"
+                  }
                 }
               ]
             }
