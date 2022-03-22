@@ -31,7 +31,7 @@ const createWindow = (): void => {
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
   // Open the DevTools.
-  //mainWindow.webContents.openDevTools();
+  mainWindow.webContents.openDevTools();
 };
 const createAboutWindow = (): void => {
   // Create the browser window.
@@ -78,22 +78,20 @@ app.whenReady().then(() => {
       res(result)
     }, 5000))
   })
-  
+
   ipcMain.on("open:window", (evt) => {
-    if(aboutWindow) {
-      console.log(aboutWindow);
-      
-      evt.sender.send("send:data","About window is already opened");  
+    if (aboutWindow) {
+      evt.sender.send("send:data", "About window is already opened");
       return;
     } else {
-      evt.sender.send("send:data","About window was closed");  
+      evt.sender.send("send:data", "About window was closed");
     }
     createAboutWindow();
-    evt.sender.send("send:data","About window has opened from the server");   
+    evt.sender.send("send:data", "About window has opened from the server");
 
     aboutWindow.on('close', () => {
       aboutWindow = null;
-      evt.sender.send("send:data","About window was closed");  
+      evt.sender.send("send:data", "About window was closed");
     })
   })
   createWindow();

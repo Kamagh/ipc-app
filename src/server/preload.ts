@@ -17,7 +17,5 @@ const globals = {
         }
     }
 }
-console.log("asd");
-
 
 contextBridge.exposeInMainWorld("bridge", globals);
