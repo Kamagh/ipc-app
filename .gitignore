@@ -113,3 +113,10 @@ dist
 out/
 # TernJS port file
 .tern-port
+
+.idea
+.dist
+
+package-lock.json
+
+*webpack

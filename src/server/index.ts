@@ -7,11 +7,13 @@ declare const ABOUT_WINDOW_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 declare const ABOUT_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 
+let aboutWindow: BrowserWindow;
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
   // eslint-disable-line global-require
   app.quit();
+
 }
 
 const createWindow = (): void => {
@@ -29,12 +31,12 @@ const createWindow = (): void => {
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  //mainWindow.webContents.openDevTools();
 };
-
 const createAboutWindow = (): void => {
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
+
+  aboutWindow = new BrowserWindow({
     height: 300,
     width: 400,
     webPreferences: {
@@ -43,7 +45,7 @@ const createAboutWindow = (): void => {
   });
 
   // and load the index.html of the app.
-  mainWindow.loadURL(ABOUT_WINDOW_WEBPACK_ENTRY);
+  aboutWindow.loadURL(ABOUT_WINDOW_WEBPACK_ENTRY);
 };
 
 // This method will be called when Electron has finished
@@ -68,25 +70,6 @@ app.on('activate', () => {
   }
 });
 
-/* this.registerIpcChannels(ipcChannels);
-
-private registerIpcChannels(ipcChannels: IpcChannelInterface[]) {
-  ipcChannels.forEach(channel => ipcMain.on(channel.getName(), (event, request) => channel.handle(event, request)));
-} */
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and import them here.
-
-/* function giveData() {
-  return new Promise( (res) => {
-    setTimeout(res, 2000, '---BigData---')
-  })
-} */
-
-
-/* ipcMain.handle("GET/data", async (event: IpcMainEvent, args) => {
-  return await giveData()
-})  */
-
 app.whenReady().then(() => {
   ipcMain.handle("get:data", async (evt, ...args) => {
     let result = "";
@@ -95,16 +78,23 @@ app.whenReady().then(() => {
       res(result)
     }, 5000))
   })
-
-/*   ipcMain.on("get:data", (evt) => {
-    evt.sender.send("send:data", "BigData")
-  }) */
+  
   ipcMain.on("open:window", (evt) => {
+    if(aboutWindow) {
+      console.log(aboutWindow);
+      
+      evt.sender.send("send:data","About window is already opened");  
+      return;
+    } else {
+      evt.sender.send("send:data","About window was closed");  
+    }
     createAboutWindow();
-    evt.sender.send("send:data","About window has opened from the server");     /* let win = new BrowserWindow({show: false});
-    win.on('close', function () {win = null});
-    win.once('ready-to-show', () => {win.show})
-    evt.sender.send("send:data","About window has opened from the server") */
+    evt.sender.send("send:data","About window has opened from the server");   
+
+    aboutWindow.on('close', () => {
+      aboutWindow = null;
+      evt.sender.send("send:data","About window was closed");  
+    })
   })
   createWindow();
 })
