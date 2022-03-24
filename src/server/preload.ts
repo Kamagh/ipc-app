@@ -4,11 +4,11 @@ type IListener = (event: IpcRendererEvent, ...args: any[]) => void;
 
 const globals = {
     ipcRenderer: {
-        invoke(channel: string, ...args: any) {
+        invoke(channel: string, ...args: any[]) {
             return ipcRenderer.invoke(channel, ...args);
         },
 
-        send(channel: string, ...args: any) {
+        send(channel: string, ...args: any[]) {
             ipcRenderer.send(channel, ...args);
         },
 

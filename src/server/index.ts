@@ -33,6 +33,7 @@ const createWindow = (): void => {
   // Open the DevTools.
   mainWindow.webContents.openDevTools();
 };
+
 const createAboutWindow = (): void => {
   // Create the browser window.
 
@@ -70,22 +71,23 @@ app.on('activate', () => {
   }
 });
 
+const sendingData = async () => {
+  let result = "";
+  return await new Promise(res => setTimeout(() => {
+    result = "BigData";
+    res(result)
+  }, 5000))
+}
+
 app.whenReady().then(() => {
-  ipcMain.handle("get:data", async (evt, ...args) => {
-    let result = "";
-    return await new Promise(res => setTimeout(() => {
-      result = "BigData";
-      res(result)
-    }, 5000))
-  })
+  ipcMain.handle("get:data", sendingData)
 
   ipcMain.on("open:window", (evt) => {
     if (aboutWindow) {
       evt.sender.send("send:data", "About window is already opened");
       return;
-    } else {
-      evt.sender.send("send:data", "About window was closed");
-    }
+    } 
+
     createAboutWindow();
     evt.sender.send("send:data", "About window has opened from the server");
 
@@ -94,5 +96,7 @@ app.whenReady().then(() => {
       evt.sender.send("send:data", "About window was closed");
     })
   })
+  
   createWindow();
 })
+
